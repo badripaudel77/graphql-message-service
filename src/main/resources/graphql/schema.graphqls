@@ -1,0 +1,16 @@
+#Schema for the message to be used by client, ! means mandatory.
+type Message {
+    id: ID!
+    sender: String!
+    content: String!
+    timestamp: String!
+}
+
+type Query {
+    messages: [Message!]
+    messageById(id: ID!): Message
+}
+
+type Mutation {
+    createMessage(content: String!, sender: String!): Message!
+}
