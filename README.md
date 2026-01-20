@@ -5,12 +5,15 @@
 ### 1. Using Postman
 - Request Type GraphQL (NOT HTTP)
 - URL: ``` http://localhost:8080/graphql```
-- In query:
+- In query (query messages with their users)
  ```graphql
         query {
           messages {
             id
-            sender
+            user {
+                id
+                username
+            }
             timestamp
             content
           }
@@ -25,20 +28,84 @@
 
 ##### Test Write to the database [Create Message - Mutation]
 
+##### Test: Create User
+```graphql
+    query {
+    users {
+        id
+        username
+        messages {
+            id
+            content
+            timestamp
+        }
+    }
+}
+```
+
+##### Query Users with their messages
+```graphql
+    query {
+    users {
+        id
+        username
+        messages {
+            id
+            content
+            timestamp
+        }
+    }
+}
+```
 - Mutate the DB (write to the DB)
 - createMessage is the "**MutationMapping**" in the code, that accepts two String args
 - Create the message with payload sender and content and return the 
   four fields (id, sender, content, timestamp)
 ```graphql
     mutation {
-        createMessage(sender: "Alice", content: "Hello GraphQL") {
+        createMessage(userId: 102, content: "Hello GraphQL") {
                 id
-                sender
+                user {
+                    id
+                    username
+                }
                 content
                 timestamp
         }
     }
 ```
+
+##### Get Messages with Sender (user) INFO
+```graphql
+query {
+  messages {
+    id
+    content
+    user {
+      id
+      username
+    }
+  }
+}
+```
+
+##### Create message with sender info
+```graphql
+mutation {
+    createMessage(content: "How to retrieve messages from queue effectively ?",
+     userId: {
+         username: "badripaudel"
+     }) {
+        id
+        content
+        user {
+            id
+            username
+        }
+    }
+}
+```
+
 
 ##### Test: Get All Messages (Query)
 - Get all messages query (Annotated with "**@QueryMapping**" in the code) with method name "**messages**"

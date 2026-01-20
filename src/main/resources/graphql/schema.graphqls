@@ -1,7 +1,13 @@
+type User {
+    id: ID!
+    username: String!
+    messages: [Message!]!
+}
+
 #Schema for the message to be used by client, ! means mandatory.
 type Message {
     id: ID!
-    sender: String!
+    user: User! # Message must have user
     content: String!
     timestamp: String!
 }
@@ -9,8 +15,12 @@ type Message {
 type Query {
     messages: [Message!]
     messageById(id: ID!): Message
+    users: [User!]! #get list of users
 }
 
+# 1. create message and return message
+# 2. create user and return user
 type Mutation {
-    createMessage(content: String!, sender: String!): Message!
+    createMessage(content: String!, userId: ID!): Message!
+    createUser(username: String!): User!
 }

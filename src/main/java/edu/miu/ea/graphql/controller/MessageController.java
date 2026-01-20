@@ -1,7 +1,9 @@
 package edu.miu.ea.graphql.controller;
 
 import edu.miu.ea.graphql.model.Message;
+import edu.miu.ea.graphql.model.User;
 import edu.miu.ea.graphql.repository.MessageRepository;
+import edu.miu.ea.graphql.repository.UserRepository;
 import org.springframework.stereotype.Controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.graphql.data.method.annotation.*;
@@ -19,6 +21,7 @@ import java.util.List;
 public class MessageController {
 
     private final MessageRepository messageRepository;
+    private final UserRepository userRepository;
 
     // Query: messages
     @QueryMapping
@@ -36,14 +39,15 @@ public class MessageController {
     @MutationMapping
     public Message createMessage(
             @Argument String content,
-            @Argument String sender
+            @Argument Long userId
     ) {
+        User sender = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
         Message message = Message.builder()
-                .sender(sender)
+                .user(sender)
                 .content(content)
                 .timestamp(OffsetDateTime.now())
                 .build();
-
         return messageRepository.save(message);
     }
 }

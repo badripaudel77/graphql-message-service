@@ -19,11 +19,12 @@ public class Message {
     private Long id;
 
     @Column(nullable = false)
-    private String sender;
-
-    @Column(nullable = false)
     private String content;
 
     private OffsetDateTime timestamp;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 }
 
